@@ -1,0 +1,25 @@
+# Compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+
+# Flask instance folder
+instance/
+
+# Environment variables
+.env
+
+# Node.js modules
+node_modules/
+
+# Other potential files and folders to ignore
+*.log
+*.sqlite3
+*.db
+.DS_Store
+*.iml
+*.vscode/

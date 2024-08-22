@@ -1,0 +1,237 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Calculadora de Imposto sobre Investimentos</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="static/css/main.css" />
+    <style>
+        .calculator {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #000000;
+            border-radius: 10px;
+            background: #f9f9f9;
+        }
+        .calculator h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .calculator .form-group {
+            margin-bottom: 15px;
+        }
+        .calculator .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .calculator .form-group input,
+        .calculator .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .calculator .form-group button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            border: none;
+            color: #fff;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .calculator .form-group button:hover {
+            background: #0056b3;
+        }
+        .calculator .result {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .result-table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch; /* Suaviza o rolar no iOS */
+        }
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .result-table th, .result-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .result-table th {
+            background-color: #f2f2f2;
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .back-button svg {
+            width: 24px;
+            height: 24px;
+            fill: #007bff;
+        }
+        .back-button:hover svg {
+            fill: #0056b3;
+        }
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .result-table {
+                min-width: 600px; /* Garante que a tabela não quebre o layout em telas pequenas */
+            }
+        }
+        .info-message {
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #F9F9F9;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .info-message h3 {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body class="is-preload">
+    <!-- Wrapper -->
+    <div id="wrapper">
+        <button class="back-button" onclick="window.location.href='index'">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
+        </button>
+        <!-- Main -->
+        <div id="main">
+            <div class="inner">
+                <!-- Header -->
+                <header id="header">
+                    <a href="indexsimulador" class="logo"><strong>Calculadora de Imposto sobre Investimentos</strong></a>
+                </header>
+
+                <!-- Content --> 
+                <section>
+                    <div class="calculator">
+                        <h2>Calculadora de Imposto sobre Investimentos em Ações</h2>
+                        <form id="taxForm">
+                            <div class="form-group">
+                                <label for="purchaseValue">Valor de Compra (R$):</label>
+                                <input type="number" id="purchaseValue" name="purchaseValue" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="saleValue">Valor de Venda (R$):</label>
+                                <input type="number" id="saleValue" name="saleValue" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="quantity">Quantidade de Ações:</label>
+                                <input type="number" id="quantity" name="quantity" step="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="taxRate">Taxa de Imposto (%):</label>
+                                <input type="number" id="taxRate" name="taxRate" step="0.01" value="20" required>
+                            </div>
+                            <div class="form-group">
+                                <ul class="actions fit">
+                                    <li><a class="button primary fit" onclick="calculateTax()">Calcular Imposto</a></li>
+                                </ul>
+                            </div>
+                            <div class="result" id="result">
+                                <h3>Resultado:</h3>
+                                <p id="resultSummary"></p>
+                                <div class="result-table-wrapper">
+                                    <table class="result-table" id="resultTable" style="display: none;">
+                                        <thead>
+                                            <tr>
+                                                <th>Descrição</th>
+                                                <th>Valor</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="resultBody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+                
+                <!-- Informative Message -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info" style="vertical-align: middle; margin-right: 8px;">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <section class="info-message">
+                    
+                    <h2>Informações Importantes:</h2>
+                    <p>Os lucros com vendas de ações, opções e contratos futuros estão sujeitos à alíquota de 15% de Imposto de Renda nas operações comuns, em que a compra e a venda ocorrem em dias diferentes.<p> A alíquota sobe para 20% nos ganhos em "day-trade", quando a compra e a venda acontecem no mesmo dia.</p>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="static/assets/js/jquery.min.js"></script>
+    <script src="static/assets/js/browser.min.js"></script>
+    <script src="static/assets/js/breakpoints.min.js"></script>
+    <script src="static/assets/js/util.js"></script>
+    <script src="static/assets/js/main.js"></script>
+
+    <script>
+        function calculateTax() {
+            const purchaseValue = parseFloat(document.getElementById('purchaseValue').value);
+            const saleValue = parseFloat(document.getElementById('saleValue').value);
+            const quantity = parseInt(document.getElementById('quantity').value);
+            const taxRate = parseFloat(document.getElementById('taxRate').value) / 100;
+
+            const totalPurchase = purchaseValue * quantity;
+            const totalSale = saleValue * quantity;
+            const capitalGain = totalSale - totalPurchase;
+            const taxDue = capitalGain * taxRate;
+
+            const resultTable = document.getElementById('resultTable');
+            const resultBody = document.getElementById('resultBody');
+
+            resultBody.innerHTML = `
+                <tr>
+                    <td>Valor Total de Compra</td>
+                    <td>R$ ${totalPurchase.toFixed(2)}</td>
+                </tr>
+                <tr>
+                    <td>Valor Total de Venda</td>
+                    <td>R$ ${totalSale.toFixed(2)}</td>
+                </tr>
+                <tr>
+                    <td>Ganho de Capital</td>
+                    <td>R$ ${capitalGain.toFixed(2)}</td>
+                </tr>
+                <tr>
+                    <td>Imposto Devido</td>
+                    <td>R$ ${taxDue.toFixed(2)}</td>
+                </tr>
+            `;
+
+            document.getElementById('resultSummary').innerHTML = `
+                Valor total de compra: R$ ${totalPurchase.toFixed(2)}<br>
+                Valor total de venda: R$ ${totalSale.toFixed(2)}<br>
+                Ganho de capital: R$ ${capitalGain.toFixed(2)}<br>
+                Imposto devido: R$ ${taxDue.toFixed(2)}
+            `;
+
+            resultTable.style.display = 'table';
+        }
+    </script>
+</body>
+</html>

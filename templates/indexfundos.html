@@ -1,0 +1,221 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Informações do Fundo Imobiliário</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="static/css/main.css" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        .fund-search {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background: #f9f9f9;
+        }
+        .fund-search h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .fund-search .form-group {
+            margin-bottom: 15px;
+        }
+        .fund-search .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .fund-search .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .fund-search .form-group button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            border: none;
+            color: #fff;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .fund-search .form-group button:hover {
+            background: #0056b3;
+        }
+        .fund-search .result {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .fund-search .fund-details {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .fund-search .fund-details img {
+            height: 64px;
+            width: 64px;
+            border-radius: 8px;
+            margin-right: 20px;
+        }
+        .fund-search .fund-details div {
+            text-align: left;
+        }
+        .fund-search .fund-details h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .fund-search .fund-details p {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .back-button svg {
+            width: 24px;
+            height: 24px;
+            fill: #007bff;
+        }
+
+        .back-button:hover svg {
+            fill: #0056b3;
+        }
+
+    </style>
+</head>
+<body class="is-preload">
+    <!-- Wrapper -->
+    <div id="wrapper">
+        <button class="back-button" onclick="window.location.href='index'">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
+        </button>
+
+        <!-- Main -->
+        <div id="main">
+            <div class="inner">
+                <!-- Header -->
+                <header id="header">
+                    <a href="indexcalculadora" class="logo"><strong>Informações do Fundo Imobiliário</strong></a>
+                </header>
+
+                <!-- Content -->
+                <section>
+                    <div class="fund-search">
+                        <h1 class="text-2xl font-bold mb-4">Buscar Fundo Imobiliário</h1>
+                        <div class="form-group">
+                            <label for="ticker" class="block text-gray-700 text-sm font-bold mb-2">Símbolo do Fundo Imobiliário:</label>
+                            <select id="ticker" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            </select>
+                            <ul class="actions fit">
+                                <li><a class="button primary fit" onclick="fetchFundInfo()">Buscar</a></li>
+                            </ul>
+                        </div>
+                        <div id="fund-info" class="hidden">
+                            <div class="fund-details">
+                                <img id="logo" alt="Logo do Fundo" class="h-16 w-16 mr-4">
+                                <div>
+                                    <h1 id="shortName" class="text-2xl font-bold"></h1>
+                                    <p id="longName" class="text-gray-600"></p>
+                                </div>
+                            </div>
+                            <div id="details">
+                                <p><strong>Preço Atual:</strong> R$ <span id="price"></span></p>
+                                <p><strong>Variação:</strong> <span id="change"></span></p>
+                                <p><strong>Percentual de Variação:</strong> <span id="changePercent"></span>%</p>
+                                <p><strong>Máxima do Dia:</strong> R$ <span id="dayHigh"></span></p>
+                                <p><strong>Mínima do Dia:</strong> R$ <span id="dayLow"></span></p>
+                                <p><strong>Volume:</strong> <span id="volume"></span></p>
+                        
+                            </div>
+                        </div>
+                        <div id="error-message" class="hidden text-red-500 mt-4"></div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+
+               
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="static/assets/js/jquery.min.js"></script>
+    <script src="static/assets/js/jquery.scrolly.min.js"></script>
+    <script src="static/assets/js/browser.min.js"></script>
+    <script src="static/assets/js/breakpoints.min.js"></script>
+    <script src="static/assets/js/util.js"></script>
+    <script src="static/assets/js/main.js"></script>
+
+    <script>
+        async function fetchAvailableFunds() {
+            const response = await fetch('/available_funds');
+            const data = await response.json();
+
+            if (data.error) {
+                document.getElementById('error-message').innerText = data.error;
+                document.getElementById('error-message').classList.remove('hidden');
+            } else {
+                const select = document.getElementById('ticker');
+                data.funds.forEach(fund => {
+                    const option = document.createElement('option');
+                    option.value = fund;
+                    option.text = fund;
+                    select.add(option);
+                });
+            }
+        }
+
+        async function fetchFundInfo() {
+            const ticker = document.getElementById('ticker').value;
+            const response = await fetch('/show_fund_info', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ ticker: ticker })
+            });
+            const data = await response.json();
+
+            if (data.error) {
+                document.getElementById('error-message').innerText = data.error;
+                document.getElementById('error-message').classList.remove('hidden');
+                document.getElementById('fund-info').classList.add('hidden');
+            } else {
+                document.getElementById('error-message').classList.add('hidden');
+                document.getElementById('fund-info').classList.remove('hidden');
+                document.getElementById('logo').src = data.logourl;
+                document.getElementById('shortName').innerText = data.shortName;
+                document.getElementById('longName').innerText = data.longName;
+                document.getElementById('price').innerText = data.regularMarketPrice;
+                document.getElementById('change').innerText = data.regularMarketChange;
+                document.getElementById('changePercent').innerText = data.regularMarketChangePercent;
+                document.getElementById('dayHigh').innerText = data.regularMarketDayHigh;
+                document.getElementById('dayLow').innerText = data.regularMarketDayLow;
+                document.getElementById('volume').innerText = data.regularMarketVolume;
+                document.getElementById('marketCap').innerText = data.marketCap;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchAvailableFunds);
+    </script>
+</body>
+</html>

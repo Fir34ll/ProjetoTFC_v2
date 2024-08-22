@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post-Login Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1 style="color: #A9A9A9;">O pequeno investidor</h1><h1>Tipo de Investidor: {{ perfilinvestidor }}</h1>
+        </div>
+        <nav>
+            <ul>
+                <li ><a href="logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="intro">
+            <h2>Bem-vindo ao seu Dashboard {{ name }} !</h2>
+            <p>Explore os cards abaixo para navegar para diferentes seções da aplicação.</p>
+        </section>
+
+        <section class="cards">
+            <article class="card card-1">
+                <a href="{{ url_for('rotagraficos.indexgrafico') }}">
+                    <img src="static/svg/grafico.svg" alt="Icone Card 1">
+                    <h3>Graficos</h3>
+                    <p>Busque os graficos das suas açoes favoritas.</p>
+                </a>
+            </article>
+            <article class="card card-2">
+                <a href="{{ url_for('indexcalculadora') }}">
+                    <img src="static/svg/money.svg" alt="Icone Card 1">
+                    <h3>Calcular Juros</h3>
+                    <p>Calcule investimentos com juros compostos.</p>
+                </a>
+            </article>
+            <article class="card card-3">
+                <a href="{{ url_for('rotacarteira.indexcarteira') }}">
+                    <img src="static/svg/carteira.svg" alt="Icone Card 1">
+                    <h3>Carteira Virtual</h3>
+                    <p>Simule sua carteira virtual.</p>
+                </a>
+            </article>
+            <article class="card card-4">
+                <a href="{{ url_for('rotaaçoes.indexaçao') }}">
+                    <img src="static/svg/maleta.svg" alt="Icone Card 1">
+                    <h3>Buscar ação</h3>
+                    <p>Busque por informaões de ações.</p>
+                </a>
+            </article>
+            <article class="card card-5">
+                <a href="{{ url_for('rotaflls.indexfundos') }}">
+                    <img src="static/svg/bank.svg" alt="Icone Card 1">
+                    <h3>FIIs</h3>
+                    <p>Busque por informaçoes de fundos imobiliários.</p>
+                </a>
+            </article>
+            <article class="card card-6">
+                <a href="{{ url_for('indexemprestimos') }}">
+                    <img src="static/svg/emprestimo.svg" alt="Icone Card 1">
+                    <h3>Empréstimos</h3>
+                    <p>Simule e calcule empréstimos.</p>
+                </a>
+            </article>
+            <article class="card card-7">
+                <a href="{{ url_for('indeximposto') }}">
+                    <img src="static/svg/imposto.svg" alt="Icone Card 1">
+                    <h3>Calcular Imposto</h3>
+                    <p>Calcule o imposto a pagar utilizando açôes.</p>
+                </a>
+            </article>
+            <article class="card card-8">
+                <a href="{{ url_for('rotaperfil.perfilinvestidor') }}">
+                    <img src="static/svg/perfil.svg" alt="Icone Card 1">
+                    <h3>Perfil do investidor</h3>
+                    <p>Teste e verifique seu perfil de investidor.</p>
+                </a>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; Feito por: Rafael Ramos<br> Projeto para TCC.</p>
+    </footer>
+</body>
+</html>

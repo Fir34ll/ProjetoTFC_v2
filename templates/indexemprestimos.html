@@ -1,0 +1,262 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Simulador de Empréstimos</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="static/css/main.css" />
+    <style>
+        .simulator {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #000000;
+            border-radius: 10px;
+            background: #f9f9f9;
+        }
+        .simulator h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .simulator .form-group {
+            margin-bottom: 15px;
+        }
+        .simulator .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .simulator .form-group input,
+        .simulator .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .simulator .form-group button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            border: none;
+            color: #fff;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .simulator .form-group button:hover {
+            background: #0056b3;
+        }
+        .simulator .result {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .result-table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch; /* Suaviza o rolar no iOS */
+        }
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .result-table th, .result-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: right;
+        }
+        .result-table th {
+            background-color: #f2f2f2;
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .back-button svg {
+            width: 24px;
+            height: 24px;
+            fill: #007bff;
+        }
+        .back-button:hover svg {
+            fill: #0056b3;
+        }
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .result-table {
+                min-width: 600px; /* Garante que a tabela não quebre o layout em telas pequenas */
+            }
+        }
+    </style>
+</head>
+<body class="is-preload">
+    <!-- Wrapper -->
+    <div id="wrapper">
+        <button class="back-button" onclick="window.location.href='index'">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
+        </button>
+        <!-- Main -->
+        <div id="main">
+            <div class="inner">
+                <!-- Header -->
+                <header id="header">
+                    <a href="indexsimulador" class="logo"><strong>Simulador de Empréstimos</strong></a>
+                </header>
+
+                <!-- Content -->
+                <section>
+                    <div class="simulator">
+                        <h2>Simulador de Empréstimos</h2>
+                        <form id="loanForm">
+                            <div class="form-group">
+                                <label for="loanAmount">Valor do Empréstimo (R$):</label>
+                                <input type="number" id="loanAmount" name="loanAmount" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="installments">Número de Parcelas:</label>
+                                <input type="number" id="installments" name="installments" step="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="installmentType">Tipo de Parcelas:</label>
+                                <input type="text" id="installmentType" name="installmentType" value="Fixas (Tabela Price)" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="interestRate">Taxa de Juros:</label>
+                                <input type="number" id="interestRate" name="interestRate" step="0.01" required>
+                                <select id="interestRateType" name="interestRateType">
+                                    <option value="monthly">Ao Mês</option>
+                                    <option value="annual">Ao Ano</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="index">Índice de Correção Monetária:</label>
+                                <select id="index" name="index">
+                                    <option value="none">Nenhum</option>
+                                    <!-- Outros índices podem ser adicionados aqui -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="firstInstallmentDate">Data da Primeira Parcela:</label>
+                                <input type="date" id="firstInstallmentDate" name="firstInstallmentDate" required>
+                            </div>
+                            <div class="form-group">
+                                <ul class="actions fit">
+                                    <li><a class="button primary fit" onclick="calculateLoan()">Simular</a></li>
+                                </ul>
+                            </div>
+                            <div class="result" id="result">
+                                <h3>Resultado:</h3>
+                                <p id="resultSummary"></p>
+                                <div class="result-table-wrapper">
+                                    <table class="result-table" id="resultTable" style="display: none;">
+                                        <thead>
+                                            <tr>
+                                                <th>Parcelas</th>
+                                                <th>Valores das Amortizações</th>
+                                                <th>Juros</th>
+                                                <th>Saldos Devedores</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="resultBody">
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Totais</th>
+                                                <th id="totalAmortizations">R$ 0.00</th>
+                                                <th id="totalInterest">R$ 0.00</th>
+                                                <th id="totalOutstanding">R$ 0.00</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="static/assets/js/jquery.min.js"></script>
+    <script src="static/assets/js/browser.min.js"></script>
+    <script src="static/assets/js/breakpoints.min.js"></script>
+    <script src="static/assets/js/util.js"></script>
+    <script src="static/assets/js/main.js"></script>
+
+    <script>
+        function formatDate(date) {
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Mês começa de 0
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        function calculateLoan() {
+            const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+            const installments = parseInt(document.getElementById('installments').value);
+            let interestRate = parseFloat(document.getElementById('interestRate').value);
+            const interestRateType = document.getElementById('interestRateType').value;
+
+            if (interestRateType === 'annual') {
+                interestRate = (Math.pow(1 + (interestRate / 100), 1 / 12) - 1); // Converte a taxa anual para mensal
+            } else {
+                interestRate = interestRate / 100; // Taxa mensal
+            }
+
+            let totalAmortizations = 0;
+            let totalInterest = 0;
+            let balance = loanAmount;
+            const resultTable = document.getElementById('resultTable');
+            const resultBody = document.getElementById('resultBody');
+
+            resultBody.innerHTML = '';
+
+            for (let i = 1; i <= installments; i++) {
+                const interest = balance * interestRate;
+                const amortization = (loanAmount / installments) + interest;
+                totalAmortizations += amortization;
+                totalInterest += interest;
+                balance -= (amortization - interest);
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>#${i}</td>
+                    <td>R$ ${amortization.toFixed(2)}</td>
+                    <td>R$ ${interest.toFixed(2)}</td>
+                    <td>R$ ${Math.max(balance, 0).toFixed(2)}</td>
+                `;
+                resultBody.appendChild(row);
+            }
+
+            document.getElementById('totalAmortizations').textContent = `R$ ${totalAmortizations.toFixed(2)}`;
+            document.getElementById('totalInterest').textContent = `R$ ${totalInterest.toFixed(2)}`;
+            document.getElementById('totalOutstanding').textContent = `R$ ${Math.max(balance, 0).toFixed(2)}`;
+
+            const firstInstallmentDate = new Date(document.getElementById('firstInstallmentDate').value);
+            firstInstallmentDate.setDate(firstInstallmentDate.getDate() + 1); // Adiciona 1 dia
+            const lastInstallmentDate = new Date(firstInstallmentDate);
+            lastInstallmentDate.setMonth(firstInstallmentDate.getMonth() + installments - 1);
+
+            document.getElementById('resultSummary').innerHTML = `
+                Valor do empréstimo: R$${loanAmount.toFixed(2)}<br>
+                Número de parcelas: ${installments}<br>
+                Tipo de parcelas: Fixas (Tabela Price)<br>
+                Valor da taxa de juros: ${interestRateType === 'monthly' ? (interestRate * 100).toFixed(2) : (interestRate * 12 * 100).toFixed(2)}% ao ${interestRateType === 'monthly' ? 'mês' : 'ano'}<br>
+                Índice de correção monetária: Nenhum<br>
+                Data da primeira parcela: ${formatDate(firstInstallmentDate)}<br>
+                Data da última parcela: ${formatDate(lastInstallmentDate)}
+            `;
+
+            resultTable.style.display = 'table';
+        }
+    </script>
+</body>
+</html>
