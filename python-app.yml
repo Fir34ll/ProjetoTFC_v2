@@ -1,4 +1,4 @@
-name: app
+name: Python application
 
 on:
   push:
@@ -8,15 +8,17 @@ on:
     branches:
       - main
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true  # Forçar o uso de Node.js 20
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-
+    - uses: actions/checkout@v3  # Atualize para v3
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3  # Atualize para v3
       with:
         python-version: '3.x'
 
