@@ -8,6 +8,9 @@ on:
     branches:
       - main
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true  # Forçar o uso de Node.js 20
+
 jobs:
   build:
     runs-on: ubuntu-latest
