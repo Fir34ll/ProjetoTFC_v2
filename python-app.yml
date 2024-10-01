@@ -1,0 +1,37 @@
+name: Python application
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true  # Forçar o uso de Node.js 20
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3  # Atualize para v3
+    - name: Set up Python
+      uses: actions/setup-python@v3  # Atualize para v3
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-flask
+
+    - name: Run tests
+      run: |
+        pytest
+        
+    - name: Clear pip cache
+  run: |
+    pip cache purge
