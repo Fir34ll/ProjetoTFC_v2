@@ -31,7 +31,3 @@ jobs:
     - name: Run tests
       run: |
         pytest
-        
-    - name: Clear pip cache
-  run: |
-    pip cache purge
