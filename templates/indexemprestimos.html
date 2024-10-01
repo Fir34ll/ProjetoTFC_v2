@@ -241,7 +241,7 @@
             document.getElementById('totalOutstanding').textContent = `R$ ${Math.max(balance, 0).toFixed(2)}`;
 
             const firstInstallmentDate = new Date(document.getElementById('firstInstallmentDate').value);
-            firstInstallmentDate.setDate(firstInstallmentDate.getDate() + 1); // Adiciona 1 dia
+            firstInstallmentDate.setDate(firstInstallmentDate.getDate() + 1);
             const lastInstallmentDate = new Date(firstInstallmentDate);
             lastInstallmentDate.setMonth(firstInstallmentDate.getMonth() + installments - 1);
 
