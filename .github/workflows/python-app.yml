@@ -20,7 +20,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v3  # Atualize para v3
       with:
-        python-version: '3.10'
+        python-version: '3.x'
 
     - name: Install dependencies
       run: |
@@ -31,8 +31,7 @@ jobs:
     - name: Run tests
       run: |
         pytest
-
+        
     - name: Clear pip cache
   run: |
     pip cache purge
-    
