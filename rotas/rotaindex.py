@@ -28,7 +28,7 @@ def index():
         
         if not user_info_data:
             print("Nenhum dado encontrado para o usuário.")
-            return redirect(url_for('login'))
+            return redirect(url_for('rotalogin.login'))
         
         name = user_info_data.get('name')
         perfil_investidor = user_info_data.get('perfilinvestidor')
@@ -37,10 +37,10 @@ def index():
         print(f"Perfil investidor: {perfil_investidor}")
 
         if name is None:
-            return redirect(url_for('login'))
+            return redirect(url_for('rotalogin.login'))
         
     except Exception as e:
         print(f"Erro ao buscar dados do usuário: {e}")
-        return redirect(url_for('login'))
+        return redirect(url_for('rotalogin.login'))
 
     return render_template('index.html', name=name, perfilinvestidor=perfil_investidor)

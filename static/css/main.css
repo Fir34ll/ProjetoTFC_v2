@@ -2246,3 +2246,70 @@ button,
     border-top: 0;
     margin-top: 0;
     padding-top: 0; }
+
+
+    .back-button {
+      position: fixed; /* Alterado para fixed para garantir que o botão fique sempre visível */
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 60px; /* Área de toque maior */
+      height: 60px; /* Área de toque maior */
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000; /* Garante que o botão esteja acima de outros elementos */
+      transition: background-color 0.3s ease;
+  }
+  
+  .back-button {
+    position: absolute; /* Alterado para absolute */
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 60px; /* Área de toque maior */
+    height: 60px; /* Área de toque maior */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Garante que o botão fique acima de outros elementos */
+    transition: background-color 0.3s ease;
+}
+
+.back-button svg {
+    width: 40px;
+    height: 40px;
+    fill: #007bff;
+    transition: fill 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: rgba(0, 123, 255, 0.1);
+}
+
+.back-button:hover svg {
+    fill: #0056b3;
+}
+
+/* Área de toque maior no mobile */
+@media (max-width: 768px) {
+    .back-button {
+        width: 70px; /* Área de toque maior para telas menores */
+        height: 70px;
+    }
+
+    .back-button svg {
+        width: 45px; /* Ajuste do ícone */
+        height: 45px;
+    }
+}
+
+  

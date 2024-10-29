@@ -1,173 +1,453 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil de Investidor</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="static/css/main.css" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     
     <style>
         .questionnaire-container {
             max-width: 800px;
-            margin: auto;
+            margin: 0 auto;
             padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background: #f9f9f9;
         }
         .question {
             margin-bottom: 20px;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .question h3 {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
+            font-weight: bold;
             margin-bottom: 10px;
+            color: #333;
         }
-        .back-button {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
-            color: #fff;
-            background-color: #000000;
-            border: none;
+        
+        /* Novo estilo para os radio buttons que sobrescreve o CSS principal */
+        .radio-option {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            padding: 10px;
             border-radius: 4px;
             cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
+            transition: background-color 0.2s;
+        }
+        .radio-option:hover {
+            background-color: #f0f0f0;
+        }
+        .radio-option input[type="radio"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            display: inline-block !important;
+            width: 20px !important;
+            height: 20px !important;
+            border: 2px solid #000000;
+            border-radius: 50% !important;
+            margin-right: 10px !important;
+            position: relative;
+            opacity: 1 !important;
+            float: none !important;
+            margin-right: 10px !important;
+            z-index: 1 !important;
+            cursor: pointer;
+        }
+        .radio-option input[type="radio"]:checked {
+            background-color: #000000;
+            border-color: #000000;
+        }
+        .radio-option input[type="radio"]:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background-color: white;
+            border-radius: 50%;
+        }
+        .radio-option span {
+            font-size: 1rem;
+            color: #333;
+            padding-left: 0 !important;
+        }
+
+        /* Estilo para mensagem de erro */
+        .error-message {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Estilo para pergunta com erro */
+        .question.has-error {
+            border: 1px solid #dc3545;
+        }
+
+        .question.has-error h3 {
+            color: #dc3545;
         }
     </style>
 </head>
-<body class="bg-gray-100">
-    
-    <div class="container mx-auto p-4">
-        <div class="questionnaire-container rounded-lg">
-            <h1 class="text-3xl font-bold text-center mb-6">Questionário de Perfil de Investidor</h1>
-            <a href="/index" class="back-button">Voltar</a>
-            <form id="investorProfileForm">
-                <!-- Pergunta 1 -->
-                <div class="question">
-                    <h3>1. Qual a sua faixa etária?</h3>
-                    <label><input type="radio" name="age" value="18-25" class="mr-2">18-25</label><br>
-                    <label><input type="radio" name="age" value="26-35" class="mr-2">26-35</label><br>
-                    <label><input type="radio" name="age" value="36-50" class="mr-2">36-50</label><br>
-                    <label><input type="radio" name="age" value="51+" class="mr-2">51+</label>
-                </div>
+<body class="is-preload">
+    <!-- Wrapper -->
+    <div id="wrapper">
+        <button class="back-button" onclick="window.location.href='index'">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
+        </button>
 
-                <!-- Pergunta 2 -->
-                <div class="question">
-                    <h3>2. Qual a sua experiência com investimentos?</h3>
-                    <label><input type="radio" name="experience" value="Nenhuma" class="mr-2">Nenhuma</label><br>
-                    <label><input type="radio" name="experience" value="Pouca" class="mr-2">Pouca</label><br>
-                    <label><input type="radio" name="experience" value="Moderada" class="mr-2">Moderada</label><br>
-                    <label><input type="radio" name="experience" value="Alta" class="mr-2">Alta</label>
-                </div>
+        <!-- Main -->
+        <div id="main">
+            <div class="inner">
+                <!-- Header -->
+                <header id="header">
+                    <a href="index" class="logo"><strong>Questionário de Perfil de Investidor</strong></a>
+                </header>
 
-                <!-- Pergunta 3 -->
-                <div class="question">
-                    <h3>3. Qual é o seu objetivo principal ao investir?</h3>
-                    <label><input type="radio" name="goal" value="Preservar capital" class="mr-2">Preservar capital</label><br>
-                    <label><input type="radio" name="goal" value="Obter renda" class="mr-2">Obter renda</label><br>
-                    <label><input type="radio" name="goal" value="Crescimento a longo prazo" class="mr-2">Crescimento a longo prazo</label>
-                </div>
+                <!-- Content -->
+                <section>
+                    <div class="questionnaire-container">
+                        <form id="investorProfileForm">
+                            <!-- Pergunta 1 -->
+                            <div class="question" id="question-age">
+                                <h3>1. Qual a sua faixa etária?</h3>
+                                <label class="radio-option">
+                                    <input type="radio" name="age" value="18-25" required>
+                                    <span>18-25</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="age" value="26-35" required>
+                                    <span>26-35</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="age" value="36-50" required>
+                                    <span>36-50</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="age" value="51+" required>
+                                    <span>51+</span>
+                                </label>
+                                <div class="error-message">Esta pergunta é obrigatória</div>
+                            </div>
 
-                <!-- Pergunta 4 -->
-                <div class="question">
-                    <h3>4. Qual a sua reação em relação à possibilidade de perda em um investimento?</h3>
-                    <label><input type="radio" name="riskReaction" value="Muito preocupado" class="mr-2">Muito preocupado</label><br>
-                    <label><input type="radio" name="riskReaction" value="Moderadamente preocupado" class="mr-2">Moderadamente preocupado</label><br>
-                    <label><input type="radio" name="riskReaction" value="Pouco preocupado" class="mr-2">Pouco preocupado</label><br>
-                    <label><input type="radio" name="riskReaction" value="Não me preocupo" class="mr-2">Não me preocupo</label>
-                </div>
+                            <!-- Pergunta 2 -->
+                            <div class="question" id="question-experience">
+                                <h3>2. Qual a sua experiência com investimentos?</h3>
+                                <label class="radio-option">
+                                    <input type="radio" name="experience" value="Nenhuma" required>
+                                    <span>Nenhuma</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="experience" value="Pouca" required>
+                                    <span>Pouca</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="experience" value="Moderada" required>
+                                    <span>Moderada</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="experience" value="Alta" required>
+                                    <span>Alta</span>
+                                </label>
+                                <div class="error-message">Esta pergunta é obrigatória</div>
+                            </div>
 
-                <!-- Pergunta 5 -->
-                <div class="question">
-                    <h3>5. Qual é o seu horizonte de investimento?</h3>
-                    <label><input type="radio" name="horizon" value="Menos de 1 ano" class="mr-2">Menos de 1 ano</label><br>
-                    <label><input type="radio" name="horizon" value="1 a 3 anos" class="mr-2">1 a 3 anos</label><br>
-                    <label><input type="radio" name="horizon" value="3 a 5 anos" class="mr-2">3 a 5 anos</label><br>
-                    <label><input type="radio" name="horizon" value="Mais de 5 anos" class="mr-2">Mais de 5 anos</label>
-                </div>
+                            <!-- Pergunta 3 -->
+                            <div class="question" id="question-goal">
+                                <h3>3. Qual é o seu objetivo principal ao investir?</h3>
+                                <label class="radio-option">
+                                    <input type="radio" name="goal" value="Preservar capital" required>
+                                    <span>Preservar capital</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="goal" value="Obter renda" required>
+                                    <span>Obter renda</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="goal" value="Crescimento a longo prazo" required>
+                                    <span>Crescimento a longo prazo</span>
+                                </label>
+                                <div class="error-message">Esta pergunta é obrigatória</div>
+                            </div>
 
-                <!-- Pergunta 6 -->
-                <div class="question">
-                    <h3>6. Como você reagiria se seus investimentos apresentassem uma queda significativa em um curto período?</h3>
-                    <label><input type="radio" name="shortTermLoss" value="Venderia todos os investimentos" class="mr-2">Venderia todos os investimentos</label><br>
-                    <label><input type="radio" name="shortTermLoss" value="Venderia parte dos investimentos" class="mr-2">Venderia parte dos investimentos</label><br>
-                    <label><input type="radio" name="shortTermLoss" value="Não venderia, mas ficaria preocupado" class="mr-2">Não venderia, mas ficaria preocupado</label><br>
-                    <label><input type="radio" name="shortTermLoss" value="Aumentaria os investimentos" class="mr-2">Aumentaria os investimentos</label>
-                </div>
+                            <!-- Pergunta 4 -->
+                            <div class="question" id="question-riskReaction">
+                                <h3>4. Qual a sua reação em relação à possibilidade de perda em um investimento?</h3>
+                                <label class="radio-option">
+                                    <input type="radio" name="riskReaction" value="Muito preocupado" required>
+                                    <span>Muito preocupado</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="riskReaction" value="Moderadamente preocupado" required>
+                                    <span>Moderadamente preocupado</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="riskReaction" value="Pouco preocupado" required>
+                                    <span>Pouco preocupado</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="riskReaction" value="Não me preocupo" required>
+                                    <span>Não me preocupo</span>
+                                </label>
+                                <div class="error-message">Esta pergunta é obrigatória</div>
+                            </div>
 
-                <!-- Pergunta 7 -->
-                <div class="question">
-                    <h3>7. Qual a porcentagem do seu patrimônio está investida em ativos de risco (ações, fundos imobiliários, etc.)?</h3>
-                    <label><input type="radio" name="riskAssets" value="0-10%" class="mr-2">0-10%</label><br>
-                    <label><input type="radio" name="riskAssets" value="11-25%" class="mr-2">11-25%</label><br>
-                    <label><input type="radio" name="riskAssets" value="26-50%" class="mr-2">26-50%</label><br>
-                    <label><input type="radio" name="riskAssets" value="Mais de 50%" class="mr-2">Mais de 50%</label>
-                </div>
+                            <!-- Pergunta 5 -->
+                            <div class="question" id="question-horizon">
+                                <h3>5. Qual é o seu horizonte de investimento?</h3>
+                                <label class="radio-option">
+                                    <input type="radio" name="horizon" value="Menos de 1 ano" required>
+                                    <span>Menos de 1 ano</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="horizon" value="1 a 3 anos" required>
+                                    <span>1 a 3 anos</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="horizon" value="3 a 5 anos" required>
+                                    <span>3 a 5 anos</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="horizon" value="Mais de 5 anos" required>
+                                    <span>Mais de 5 anos</span>
+                                </label>
+                                <div class="error-message">Esta pergunta é obrigatória</div>
+                            </div>
 
-                <!-- Pergunta 8 -->
-                <div class="question">
-                    <h3>8. Qual a sua fonte de renda principal?</h3>
-                    <label><input type="radio" name="incomeSource" value="Salário fixo" class="mr-2">Salário fixo</label><br>
-                    <label><input type="radio" name="incomeSource" value="Renda variável" class="mr-2">Renda variável</label><br>
-                    <label><input type="radio" name="incomeSource" value="Rendimentos de investimentos" class="mr-2">Rendimentos de investimentos</label><br>
-                    <label><input type="radio" name="incomeSource" value="Outros" class="mr-2">Outros</label>
-                </div>
+                            <!-- Pergunta 6 -->
+                            <div class="question" id="question-shortTermLoss">
+                                <h3>6. Como você reagiria se seus investimentos apresentassem uma queda significativa em um curto período?</h3>
+                                <label class="radio-option">
+                                    <input type="radio" name="shortTermLoss" value="Venderia todos os investimentos" required>
+                                    <span>Venderia todos os investimentos</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="shortTermLoss" value="Venderia parte dos investimentos" required>
+                                    <span>Venderia parte dos investimentos</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="shortTermLoss" value="Não venderia, mas ficaria preocupado" required>
+                                    <span>Não venderia, mas ficaria preocupado</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="shortTermLoss" value="Aumentaria os investimentos" required>
+                                    <span>Aumentaria os investimentos</span>
+                                </label>
+                                <div class="error-message">Esta pergunta é obrigatória</div>
+                            </div>
 
-                <!-- Pergunta 9 -->
-                <div class="question">
-                    <h3>9. Com que frequência você acompanha o desempenho dos seus investimentos?</h3>
-                    <label><input type="radio" name="trackingFrequency" value="Diariamente" class="mr-2">Diariamente</label><br>
-                    <label><input type="radio" name="trackingFrequency" value="Semanalmente" class="mr-2">Semanalmente</label><br>
-                    <label><input type="radio" name="trackingFrequency" value="Mensalmente" class="mr-2">Mensalmente</label><br>
-                    <label><input type="radio" name="trackingFrequency" value="Raramente" class="mr-2">Raramente</label>
-                </div>
+                            <!-- Pergunta 7 -->
+                            <div class="question" id="question-riskAssets">
+                                <h3>7. Qual a porcentagem do seu patrimônio está investida em ativos de risco (ações, fundos imobiliários, etc.)?</h3>
+                                <label class="radio-option">
+                                    <input type="radio" name="riskAssets" value="0-10%" required>
+                                    <span>0-10%</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="riskAssets" value="11-25%" required>
+                                    <span>11-25%</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="riskAssets" value="26-50%" required>
+                                    <span>26-50%</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="riskAssets" value="Mais de 50%" required>
+                                    <span>Mais de 50%</span>
+                                </label>
+                                <div class="error-message">Esta pergunta é obrigatória</div>
+                            </div>
 
-                <!-- Pergunta 10 -->
-                <div class="question">
-                    <h3>10. Qual a sua expectativa de retorno anual sobre seus investimentos?</h3>
-                    <label><input type="radio" name="returnExpectation" value="Até 5%" class="mr-2">Até 5%</label><br>
-                    <label><input type="radio" name="returnExpectation" value="5-10%" class="mr-2">5-10%</label><br>
-                    <label><input type="radio" name="returnExpectation" value="11-20%" class="mr-2">11-20%</label><br>
-                    <label><input type="radio" name="returnExpectation" value="Mais de 20%" class="mr-2">Mais de 20%</label>
-                </div>
+                            <!-- Pergunta 8 -->
+                            <div class="question" id="question-incomeSource">
+                                <h3>8. Qual a sua fonte de renda principal?</h3>
+                                <label class="radio-option">
+                                    <input type="radio" name="incomeSource" value="Salário fixo" required>
+                                    <span>Salário fixo</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="incomeSource" value="Renda variável" required>
+                                    <span>Renda variável</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="incomeSource" value="Rendimentos de investimentos" required>
+                                    <span>Rendimentos de investimentos</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="incomeSource" value="Outros" required>
+                                    <span>Outros</span>
+                                </label>
+                                <div class="error-message">Esta pergunta é obrigatória</div>
+                            </div>
 
-                <!-- Pergunta 11 -->
-                <div class="question">
-                    <h3>11. Como você descreveria seu conhecimento sobre o mercado financeiro?</h3>
-                    <label><input type="radio" name="marketKnowledge" value="Nenhum" class="mr-2">Nenhum</label><br>
-                    <label><input type="radio" name="marketKnowledge" value="Básico" class="mr-2">Básico</label><br>
-                    <label><input type="radio" name="marketKnowledge" value="Intermediário" class="mr-2">Intermediário</label><br>
-                    <label><input type="radio" name="marketKnowledge" value="Avançado" class="mr-2">Avançado</label>
-                </div>
+                            <!-- Pergunta 9 -->
+                            <div class="question" id="question-trackingFrequency">
+                                <h3>9. Com que frequência você acompanha o desempenho dos seus investimentos?</h3>
+                                <label class="radio-option">
+                                    <input type="radio" name="trackingFrequency" value="Diariamente" required>
+                                    <span>Diariamente</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="trackingFrequency" value="Semanalmente" required>
+                                    <span>Semanalmente</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="trackingFrequency" value="Mensalmente" required>
+                                    <span>Mensalmente</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="trackingFrequency" value="Raramente" required>
+                                    <span>Raramente</span>
+                                </label>
+                                <div class="error-message">Esta pergunta é obrigatória</div>
+                            </div>
 
-                <!-- Pergunta 12 -->
-                <div class="question">
-                    <h3>12. Qual é a sua disposição para investir em produtos financeiros inovadores e menos conhecidos?</h3>
-                    <label><input type="radio" name="innovationWillingness" value="Nenhuma" class="mr-2">Nenhuma</label><br>
-                    <label><input type="radio" name="innovationWillingness" value="Baixa" class="mr-2">Baixa</label><br>
-                    <label><input type="radio" name="innovationWillingness" value="Moderada" class="mr-2">Moderada</label><br>
-                    <label><input type="radio" name="innovationWillingness" value="Alta" class="mr-2">Alta</label>
-                </div>
+                            <!-- Pergunta 10 -->
+                            <div class="question" id="question-returnExpectation">
+                                <h3>10. Qual a sua expectativa de retorno anual sobre seus investimentos?</h3>
+                                <label class="radio-option">
+                                    <input type="radio" name="returnExpectation" value="Até 5%" required>
+                                    <span>Até 5%</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="returnExpectation" value="5-10%" required>
+                                    <span>5-10%</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="returnExpectation" value="11-20%" required>
+                                    <span>11-20%</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="returnExpectation" value="Mais de 20%" required>
+                                    <span>Mais de 20%</span>
+                                </label>
+                                <div class="error-message">Esta pergunta é obrigatória</div>
+                            </div>
 
-                <!-- Botão de Enviar -->
-                <div class="text-center">
-                    <button type="submit" class="mt-4" style="background-color: #000000; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block; color: white; padding: 8px 16px;">Enviar</button>
+                            <!-- Pergunta 11 -->
+                            <div class="question" id="question-marketKnowledge">
+                                <h3>11. Como você descreveria seu conhecimento sobre o mercado financeiro?</h3>
+                                <label class="radio-option">
+                                    <input type="radio" name="marketKnowledge" value="Nenhum" required>
+                                    <span>Nenhum</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="marketKnowledge" value="Básico" required>
+                                    <span>Básico</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="marketKnowledge" value="Intermediário" required>
+                                    <span>Intermediário</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="marketKnowledge" value="Avançado" required>
+                                    <span>Avançado</span>
+                                </label>
+                                <div class="error-message">Esta pergunta é obrigatória</div>
+                            </div>
 
-                </div>
-            </form>
-            <div id="result" class="text-center mt-6"></div>
+                            <!-- Pergunta 12 -->
+                            <div class="question" id="question-innovationWillingness">
+                                <h3>12. Qual é a sua disposição para investir em produtos financeiros inovadores e menos conhecidos?</h3>
+                                <label class="radio-option">
+                                    <input type="radio" name="innovationWillingness" value="Nenhuma" required>
+                                    <span>Nenhuma</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="innovationWillingness" value="Baixa" required>
+                                    <span>Baixa</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="innovationWillingness" value="Moderada" required>
+                                    <span>Moderada</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="innovationWillingness" value="Alta" required>
+                                    <span>Alta</span>
+                                </label>
+                                <div class="error-message">Esta pergunta é obrigatória</div>
+                            </div>
+
+                            <!-- Botão de Enviar -->
+                            <div class="text-center">
+                                <ul class="actions fit">
+                                    <li><button type="submit" class="button primary fit">Enviar</button></li>
+                                </ul>
+                            </div>
+                        </form>
+                        <div id="result" class="text-center mt-6 text-xl font-bold"></div>
+                    </div>
+                </section>
+            </div>
         </div>
     </div>
 
+    <!-- Scripts -->
+    <script src="static/assets/js/jquery.min.js"></script>
+    <script src="static/assets/js/jquery.scrolly.min.js"></script>
+    <script src="static/assets/js/browser.min.js"></script>
+    <script src="static/assets/js/breakpoints.min.js"></script>
+    <script src="static/assets/js/util.js"></script>
+    <script src="static/assets/js/main.js"></script>
+
+    <!-- Manter o script original do formulário -->
     <script>
         document.getElementById('investorProfileForm').addEventListener('submit', function(event) {
             event.preventDefault();
-    
+            
+            // Lista de todas as perguntas
+            const questions = [
+                'age', 'experience', 'goal', 'riskReaction', 'horizon', 
+                'shortTermLoss', 'riskAssets', 'incomeSource', 'trackingFrequency', 
+                'returnExpectation', 'marketKnowledge', 'innovationWillingness'
+            ];
+            
+            // Limpa erros anteriores
+            document.querySelectorAll('.question').forEach(q => {
+                q.classList.remove('has-error');
+                q.querySelector('.error-message').style.display = 'none';
+            });
+            
+            // Verifica se todas as perguntas foram respondidas
+            let hasErrors = false;
+            questions.forEach(questionName => {
+                const answered = document.querySelector(`input[name="${questionName}"]:checked`);
+                const questionDiv = document.querySelector(`#question-${questionName}`);
+                
+                if (!answered) {
+                    hasErrors = true;
+                    questionDiv.classList.add('has-error');
+                    questionDiv.querySelector('.error-message').style.display = 'block';
+                    
+                    // Scroll para a primeira pergunta com erro
+                    if (!hasErrors) {
+                        questionDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+            
+            // Se houver erros, não prossegue com o envio
+            if (hasErrors) {
+                return;
+            }
+
+            // Se chegou aqui, todas as perguntas foram respondidas
+            // Continua com o código original de cálculo da pontuação
             let score = 0;
             const form = new FormData(event.target);
-            const questions = [
+            const questionScores = [
                 { name: 'age', values: { '18-25': 1, '26-35': 2, '36-50': 3, '51+': 4 } },
                 { name: 'experience', values: { 'Nenhuma': 1, 'Pouca': 2, 'Moderada': 3, 'Alta': 4 } },
                 { name: 'goal', values: { 'Preservar capital': 1, 'Obter renda': 2, 'Crescimento a longo prazo': 3 } },
@@ -181,15 +461,15 @@
                 { name: 'marketKnowledge', values: { 'Nenhum': 1, 'Básico': 2, 'Intermediário': 3, 'Avançado': 4 } },
                 { name: 'innovationWillingness', values: { 'Nenhuma': 1, 'Baixa': 2, 'Moderada': 3, 'Alta': 4 } }
             ];
-    
-            // Calcula o resultado do questionário
-            questions.forEach(question => {
+
+            // Seu código existente para calcular o resultado
+            questionScores.forEach(question => {
                 const answer = form.get(question.name);
                 if (answer) {
                     score += question.values[answer] || 0;
                 }
             });
-    
+
             let resultText;
             if (score <= 24) {
                 resultText = "Conservador";
@@ -198,8 +478,8 @@
             } else {
                 resultText = "Arrojado";
             }
-    
-            // Envia apenas o resultado final para o endpoint Flask
+
+            // Envia o resultado para o endpoint Flask
             fetch('/save_investor_profile', {
                 method: 'POST',
                 headers: {
@@ -208,18 +488,20 @@
                 body: JSON.stringify({ result: resultText })
             })
             .then(response => response.json())
-    
-            // Exibe o resultado final na página
-            document.getElementById('result').innerText = `Você é um investidor ${resultText}.`;
+            .then(() => {
+                // Exibe o resultado final na página
+                document.getElementById('result').innerText = `Você é um investidor ${resultText}.`;
+            });
+        });
+
+        // Adiciona listener para remover erro quando uma opção é selecionada
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const questionDiv = this.closest('.question');
+                questionDiv.classList.remove('has-error');
+                questionDiv.querySelector('.error-message').style.display = 'none';
+            });
         });
     </script>
-    
-<!-- Scripts -->
-<script src="static/assets/js/jquery.min.js"></script>
-<script src="static/assets/js/browser.min.js"></script>
-<script src="static/assets/js/breakpoints.min.js"></script>
-<script src="static/assets/js/util.js"></script>
-<script src="static/assets/js/main.js"></script>
-
 </body>
 </html>

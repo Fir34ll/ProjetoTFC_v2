@@ -162,3 +162,124 @@ body {
   text-decoration: none;
   cursor: pointer;
 }
+
+/* Mantenha o CSS original e adicione/atualize as media queries */
+
+@media (max-width: 768px) {
+    body {
+        background-position: center;
+        overflow-y: auto;
+        min-height: 100vh;
+        padding: 20px 0;
+    }
+
+    #box {
+        width: 90%;
+        max-width: 400px;
+        height: auto;
+        min-height: 450px;
+        position: relative;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        margin: 20px 0;
+        padding: 20px 0;
+    }
+
+    #main {
+        width: 90%;
+        max-width: 350px;
+        height: 400px;
+        position: relative;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: all 0.5s ease;
+    }
+
+    #loginform, #signupform {
+        width: 280px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 0.5s ease;
+    }
+
+    #signupform {
+        top: 150%;
+    }
+
+    #loginform.slide-up {
+        top: -50%;
+        opacity: 0;
+    }
+
+    #signupform.slide-up {
+        top: 45%;
+        opacity: 1;
+    }
+
+    #loginform input, #signupform input {
+        width: 100%;
+        box-sizing: border-box;
+        margin: 10px 0;
+    }
+
+    #loginform button, #signupform button {
+        margin: 20px auto 0;
+        display: block;
+    }
+
+    #login_msg, #signup_msg {
+        position: relative;
+        width: 100%;
+        text-align: center;
+        margin: 20px 0;
+        left: 0;
+        transform: none;
+    }
+
+    #signup_msg {
+        display: none;
+    }
+
+    #login_btn, #signup_btn {
+        position: relative;
+        width: 120px;
+        display: inline-block;
+        margin: 10px;
+        left: auto;
+        right: auto;
+        transform: none;
+    }
+
+    .button-container {
+        text-align: center;
+        margin-top: 20px;
+        position: relative;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    #box {
+        width: 95%;
+    }
+
+    #main {
+        width: 95%;
+    }
+
+    #loginform, #signupform {
+        width: 260px;
+    }
+
+    #loginform h1, #signupform h1 {
+        font-size: 22px;
+    }
+
+    #login_btn, #signup_btn {
+        width: 110px;
+    }
+}

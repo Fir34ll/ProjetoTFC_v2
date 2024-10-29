@@ -14,36 +14,53 @@ db = firebase.database()
 def login():
     if request.method == 'POST':
         action = request.form.get('action')
+        
         if action == 'register':
-            name = request.form.get('name')
-            email = request.form.get('email')
-            password = request.form.get('password')
-
             try:
-                # Cria um novo usuário
+                name = request.form.get('name')
+                email = request.form.get('email')
+                password = request.form.get('password')
+                
+                # Tenta criar o usuário
                 user = auth.create_user_with_email_and_password(email, password)
                 user_id = user['localId']
-
-                # Salvar o nome do usuário no Firebase Realtime Database
+                
+                # Salva as informações adicionais
                 db.child("users").child(user_id).child("info").set({"name": name})
-
-                # Mensagem de sucesso
-                flash("Registro feito com sucesso. Você pode fazer login agora.", "success")
+                
+                flash("Registro realizado com sucesso!", "success")
+                return redirect(url_for('rotalogin.login'))
+                
             except Exception as e:
-                # Mensagem de erro
-                flash(f"Erro durante o registro: {e}", "error")
-            return redirect(url_for('rotalogin.login'))
+                error_message = str(e)
+                if "EMAIL_EXISTS" in error_message:
+                    flash("Este email já está registrado.", "error")
+                elif "WEAK_PASSWORD" in error_message:
+                    flash("A senha deve ter pelo menos 6 caracteres.", "error")
+                elif "INVALID_EMAIL" in error_message:
+                    flash("Email inválido.", "error")
+                else:
+                    flash("Erro no registro: " + error_message, "error")
+                return render_template('login.html')
         else:
-            email = request.form['email']
-            password = request.form['password']
             try:
+                email = request.form['email']
+                password = request.form['password']
+                
                 user = auth.sign_in_with_email_and_password(email, password)
                 session['user'] = user['idToken']
                 return redirect(url_for('rotaindex.index'))
+                
             except Exception as e:
-                # Mensagem de erro no login
-                flash(f"Login failed: {e}", "error")
-            return redirect(url_for('rotalogin.login'))
+                error_message = str(e)
+                if "INVALID_PASSWORD" in error_message:
+                    flash("Senha incorreta.", "error")
+                elif "EMAIL_NOT_FOUND" in error_message:
+                    flash("Email não encontrado.", "error")
+                else:
+                    flash("Erro no login: " + error_message, "error")
+                return render_template('login.html')
+
     return render_template('login.html')
 
     
@@ -52,4 +69,3 @@ def login():
 def logout():
     session.pop('user', None)
     return redirect(url_for('rotalogin.login'))
-

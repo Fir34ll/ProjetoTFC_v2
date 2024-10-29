@@ -29,7 +29,7 @@ def indexcarteira():
             response = e.response
             if response.status_code == 400 and 'INVALID_ID_TOKEN' in response.text:
                 # Redireciona para a página de login se o token for inválido
-                return redirect(url_for('login'))
+                return redirect(url_for('rotalogin.login'))
         # Para outros erros HTTP, re-levanta a exceção
         raise
 

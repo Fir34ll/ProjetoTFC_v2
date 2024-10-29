@@ -8,6 +8,7 @@
     <script src="{{ url_for('static', filename='assets/js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='assets/js/jquery-main.js') }}"></script>
     <script src="{{ url_for('static', filename='assets/js/login.js') }}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <div id="box">
@@ -22,7 +23,7 @@
                 <div style="position:relative;">
                     <input type="password" name="password" id="login-password" required>
                     <span id="toggle-login-password" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer;">
-                        👁️
+                        <i class="fas fa-eye"></i>
                     </span>
                 </div>
                 <button type="submit">Login</button>
@@ -41,57 +42,214 @@
                 <div style="position:relative;">
                     <input type="password" name="password" id="register-password" required>
                     <span id="toggle-register-password" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer;">
-                        👁️
+                        <i class="fas fa-eye"></i>
                     </span>
                 </div>
-                <button type="submit">Register</button>
+                <button type="submit">Registrar</button>
             </form>
         </div>
 
         <div id="login_msg">Possui uma conta?</div>
         <div id="signup_msg">Não possui uma conta?</div>
 
-        <button id="login_btn">LOGIN</button>
-        <button id="signup_btn">REGISTRAR</button>
+        <div class="button-container">
+            <button id="login_btn">LOGIN</button>
+            <button id="signup_btn">REGISTRAR</button>
+        </div>
     </div>
 
     <!-- Modal para mensagens -->
     <div id="message-modal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
+            <div class="modal-icon">
+                <svg id="modal-icon-success" class="hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M8 12L11 15L16 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <svg id="modal-icon-error" class="hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M15 9L9 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 9L15 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
             <p id="modal-message"></p>
+            <button class="modal-close">OK</button>
         </div>
     </div>
 
-    <!-- JavaScript para alternar a visibilidade da senha -->
+    <!-- Adicione estes estilos -->
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, #1a1a1a, #000000);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            padding: 15px;
+        }
+
+        .modal-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: #ffffff;
+        }
+
+        .modal p {
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .modal-close {
+            padding: 10px 25px;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            min-width: 100px;
+            background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-close:hover {
+            background: linear-gradient(145deg, #1a1a1a, #2c2c2c);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .success .modal-icon {
+            background: rgba(40, 167, 69, 0.1);
+        }
+
+        .error .modal-icon {
+            background: rgba(220, 53, 69, 0.1);
+        }
+
+        /* Adicione estes estilos para os olhinhos */
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #ffffff;
+            z-index: 10;
+            font-size: 16px;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .password-field {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-field input {
+            padding-right: 35px;
+        }
+    </style>
+
+    <!-- Adicione este JavaScript -->
     <script>
-        document.getElementById('toggle-login-password').addEventListener('click', function () {
-            const passwordField = document.getElementById('login-password');
-            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordField.setAttribute('type', type);
-        });
-
-        document.getElementById('toggle-register-password').addEventListener('click', function () {
-            const passwordField = document.getElementById('register-password');
-            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordField.setAttribute('type', type);
-        });
-
-        // Exibir mensagens recebidas do servidor
-        $(document).ready(function() {
+        document.addEventListener('DOMContentLoaded', function() {
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    $('#modal-message').text("{{ message }}");
-                    $('#message-modal').css('display', 'block');
+                    showModal("{{ message }}", "{{ category }}");
                 {% endfor %}
             {% endif %}
             {% endwith %}
+        });
 
-            // Fechar o modal
-            $('.close').on('click', function() {
-                $('#message-modal').css('display', 'none');
-            });
+        function showModal(message, type) {
+            const modal = document.getElementById('message-modal');
+            const modalMessage = document.getElementById('modal-message');
+            const successIcon = document.getElementById('modal-icon-success');
+            const errorIcon = document.getElementById('modal-icon-error');
+
+            modalMessage.textContent = message;
+            
+            // Reset icons
+            successIcon.classList.add('hidden');
+            errorIcon.classList.add('hidden');
+            
+            // Show appropriate icon
+            if (type === 'success') {
+                successIcon.classList.remove('hidden');
+                modal.classList.add('success');
+                modal.classList.remove('error');
+            } else {
+                errorIcon.classList.remove('hidden');
+                modal.classList.add('error');
+                modal.classList.remove('success');
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        document.querySelector('.modal-close').addEventListener('click', function() {
+            document.getElementById('message-modal').style.display = 'none';
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle para senha do login
+            const toggleLoginPassword = document.getElementById('toggle-login-password');
+            const loginPassword = document.getElementById('login-password');
+            
+            if (toggleLoginPassword && loginPassword) {
+                toggleLoginPassword.addEventListener('click', function() {
+                    const type = loginPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+                    loginPassword.setAttribute('type', type);
+                    toggleLoginPassword.innerHTML = type === 'password' ? 
+                        '<i class="fas fa-eye"></i>' : 
+                        '<i class="fas fa-eye-slash"></i>';
+                });
+            }
+
+            // Toggle para senha do registro
+            const toggleRegisterPassword = document.getElementById('toggle-register-password');
+            const registerPassword = document.getElementById('register-password');
+            
+            if (toggleRegisterPassword && registerPassword) {
+                toggleRegisterPassword.addEventListener('click', function() {
+                    const type = registerPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+                    registerPassword.setAttribute('type', type);
+                    toggleRegisterPassword.innerHTML = type === 'password' ? 
+                        '<i class="fas fa-eye"></i>' : 
+                        '<i class="fas fa-eye-slash"></i>';
+                });
+            }
         });
     </script>
 </body>

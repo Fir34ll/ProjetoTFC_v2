@@ -105,6 +105,7 @@ header nav ul li a {
 .card-6 { background-color: #c2c5c5; }
 .card-7 { background-color: #c2c5c5; }
 .card-8 { background-color: #c2c5c5; }
+.card-9 { background-color: #c2c5c5; }
 
 /* Footer Styles */
 footer {
@@ -131,13 +132,13 @@ footer ul li a {
 /* Responsive Design */
 @media (min-width: 768px) {
     .cards {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr); /* Ajuste para 3 colunas */
     }
 }
 
 @media (min-width: 1200px) {
     .cards {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr); /* Manter 3 colunas também em telas maiores */
     }
 }
 
@@ -145,4 +146,4 @@ footer ul li a {
     width: 50px;
     height: 50px;
     margin-bottom: 1rem;
-  }
+}

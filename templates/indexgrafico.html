@@ -1,32 +1,24 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title>Gráfico de Candlesticks</title>
+    <link rel="stylesheet" href="static/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
         .container {
-            width: 80%;
-            max-width: 1200px;
-            background-color: #fff;
+            max-width: 900px; /* Aumentando a largura máxima */
+            margin: 0 auto;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            position: relative;
+            border: 1px solid #000000;
+            border-radius: 10px;
+            background: #f9f9f9;
         }
-        h1 {
+        .container h2 {
             text-align: center;
-            color: #333;
+            margin-bottom: 20px;
         }
         .form-group {
             margin-bottom: 20px;
@@ -36,19 +28,13 @@
             font-weight: bold;
             margin-bottom: 5px;
         }
-        .form-group input {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
+
         .form-group button {
             padding: 10px 20px;
             font-size: 16px;
             color: #fff;
             background-color: #000000;
-            border: 10px;
+            border: none;
             border-radius: 4px;
             cursor: pointer;
             margin-top: 10px;
@@ -61,45 +47,199 @@
             height: 500px;
             margin-top: 20px;
         }
-        .back-button {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
-            color: #fff;
-            background-color: #000000;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
+
+        /* Estilos para melhorar a responsividade */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 10px;
+            }
+            #chart {
+                height: 300px;
+            }
         }
-        .back-button:hover {
-            background-color: #A9A9A9;
+
+        .info-message {
+            margin: 40px auto;
+            max-width: 900px;
+        }
+
+        .info-container {
+            background: linear-gradient(145deg, #1a1a1a, #000000);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px 35px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .info-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(145deg, #000000, #1a1a1a);
+        }
+
+        .info-icon {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            margin-top: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .info-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: #ffffff;
+            stroke-width: 1.5;
+        }
+
+        .info-content {
+            flex-grow: 1;
+        }
+
+        .info-content h2 {
+            color: #ffffff;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-family: "Roboto Slab", serif;
+        }
+
+        .info-content p {
+            color: #e0e0e0;
+            line-height: 1.7;
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .info-container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                padding: 20px;
+            }
+
+            .info-icon {
+                margin-bottom: 15px;
+                margin-top: 0;
+            }
+        }
+
+        /* Apenas adicione esta regra para criar espaçamento entre os dois blocos de informação */
+        .info-message + .info-message {
+            margin-top: 20px;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <a href="/index" class="back-button">Voltar</a>
-        <h1>Gráfico de Candlesticks</h1>
-        <div class="form-group">
-            <label for="symbol">Digite o símbolo da ação:</label>
-            <input type="text" id="symbol" placeholder="Exemplo: PETR4">
-            <button onclick="fetchData()">Mostrar Gráfico</button>
+<body class="is-preload">
+    <!-- Wrapper -->
+    <div id="wrapper">
+        <!-- Botão "Voltar" padronizado -->
+        <button class="back-button" onclick="window.location.href='index'">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
+        </button>
+        <!-- Main -->
+        <div id="main">
+            <div class="inner">
+                <!-- Header -->
+                <header id="header">
+                    <a href="index" class="logo"><strong>Gráfico de Candlesticks</strong></a>
+                </header>
+
+                <!-- Content -->
+                <section>
+                    <div class="container">
+                        <h2>Gráfico de Candlesticks</h2>
+                        <div class="form-group">
+                            <label for="symbol">Símbolo da Ação:</label>
+                            <select id="symbol" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <!-- Options will be populated by JavaScript -->
+                            </select>
+                            <ul class="actions fit">
+                                <li><a class="button primary fit" onclick="fetchData()">Mostrar Gráfico</a></li>
+                            </ul>
+                        </div>
+                        <div id="chart"></div>
+                    </div>
+                </section>
+
+                <!-- Informative Message -->
+                <section class="info-message">
+                    <div class="info-container">
+                        <div class="info-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5"/>
+                                <path d="M12 7V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M12 16.5V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="info-content">
+                            <h2>Informações Importantes</h2>
+                            <p>As ações listadas estão organizadas por ordem de liquidez no mercado. As primeiras opções representam as ações mais negociadas, oferecendo gráficos mais consistentes e confiáveis para análise. À medida que você avança na lista, encontrará ações com menor volume de negociação, o que pode resultar em gráficos menos representativos ou até mesmo impossibilidade de visualização devido à baixa atividade de mercado.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Adicione esta nova seção após a seção info-message existente -->
+                <section class="info-message">
+                    <div class="info-container">
+                        <div class="info-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                                <path d="M3 3v18h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M7 10v4M12 8v6M17 6v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="info-content">
+                            <h2>Sobre o Gráfico</h2>
+                            <p>O gráfico é exibido em candles diários, onde cada vela (candle) representa um dia útil de negociação. As velas verdes indicam movimento de alta no preço (fechamento acima da abertura), enquanto as velas vermelhas indicam movimento de baixa (fechamento abaixo da abertura).</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
         </div>
-        <div id="chart"></div>
     </div>
 
+    <!-- Scripts -->
     <script src="https://unpkg.com/lightweight-charts@3.6.0/dist/lightweight-charts.standalone.production.js"></script>
     <script>
         let chart;
 
+        async function fetchAvailableStocks() {
+            const response = await fetch('/available_stocks');
+            const data = await response.json();
+
+            if (data.error) {
+                console.error('Failed to fetch stocks:', data.error);
+            } else {
+                const symbolSelect = document.getElementById('symbol');
+                symbolSelect.innerHTML = ''; // Limpa opções existentes
+
+                data.stocks.forEach(stock => {
+                    const option = document.createElement('option');
+                    option.value = stock;
+                    option.text = stock;
+                    symbolSelect.appendChild(option);
+                });
+            }
+        }
+
         async function fetchData() {
             const symbol = document.getElementById('symbol').value;
             if (!symbol) {
-                alert('Por favor, insira um símbolo.');
+                alert('Por favor, selecione um símbolo.');
                 return;
             }
 
@@ -129,6 +269,8 @@
                 alert('Erro ao buscar dados. Por favor, tente novamente mais tarde.');
             }
         }
+
+        document.addEventListener('DOMContentLoaded', fetchAvailableStocks);
 
         function renderChart(data) {
             // Remover o último candlestick

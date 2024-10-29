@@ -66,21 +66,79 @@
             margin-top: 20px;
             text-align: center;
         }
-        .back-button {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            cursor: pointer;
+
+        .info-message {
+            margin: 40px auto;
+            max-width: 900px;
         }
-        .back-button svg {
-            width: 24px;
-            height: 24px;
-            fill: #007bff;
+
+        .info-container {
+            background: linear-gradient(145deg, #1a1a1a, #000000);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px 35px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .back-button:hover svg {
-            fill: #0056b3;
+
+        .info-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .info-icon {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            margin-top: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .info-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: #ffffff;
+            stroke-width: 1.5;
+        }
+
+        .info-content {
+            flex-grow: 1;
+        }
+
+        .info-content h2 {
+            color: #ffffff;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .info-content p {
+            color: #e0e0e0;
+            line-height: 1.7;
+            font-size: 1rem;
+            margin: 0 0 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .info-container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                padding: 20px;
+            }
+
+            .info-icon {
+                margin-bottom: 15px;
+                margin-top: 0;
+            }
         }
     </style>
 </head>
@@ -132,6 +190,26 @@
                             </div>
                         </div>
                         <div id="error-message" class="hidden text-red-500 mt-4"></div>
+                    </div>
+                    <!-- Adicione após a div stock-search -->
+                    <div class="info-message">
+                        <div class="info-container">
+                            <div class="info-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5"/>
+                                    <path d="M12 7V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    <path d="M12 16.5V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="info-content">
+                                <h2>Informações Importantes</h2>
+                                <p>Os preços das ações são atualizados de acordo com as negociações em tempo real na B3 (Bolsa Brasileira). 
+                                É importante observar que as negociações ocorrem apenas em dias úteis, nos seguintes horários:</p>
+                                <p>• Pregão Regular: 10h00 às 17h00<br>
+                                   • After-Market: 17h00 às 17h30</p>
+                                <p>Fora desses horários, incluindo feriados e finais de semana, os preços permanecem inalterados até a próxima sessão de negociação.</p>
+                            </div>
+                        </div>
                     </div>
                 </section>
             </div>

@@ -15,6 +15,12 @@ app.secret_key = 'your_secret_key'
 def first():
     return render_template('first.html')
 
+@app.route('/elements')
+def elements():
+    if 'user' not in session:
+        return redirect(url_for('rotalogin.login'))
+    return render_template('elements.html')
+
 @app.route('/iniciante')
 def iniciante():
     if 'user' not in session:
