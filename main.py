@@ -39,6 +39,18 @@ def avançado():
         return redirect(url_for('rotalogin.login'))
     return render_template('avançado.html')
 
+@app.route('/emocional')
+def emocional():
+    if 'user' not in session:
+        return redirect(url_for('rotalogin.login'))
+    return render_template('emocional.html')
+
+@app.route('/gerenciamento')
+def gerenciamento():
+    if 'user' not in session:
+        return redirect(url_for('rotalogin.login'))
+    return render_template('gerenciamento.html')
+
 @app.route('/indexcalculadora')
 def indexcalculadora():
     if 'user' not in session:

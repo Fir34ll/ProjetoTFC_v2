@@ -535,24 +535,49 @@
             // Excluir investimento
             $(document).on('click', '.delete-button', function () {
                 var row = $(this).closest('tr');
-                var id = row.data('id');
-
-                $.ajax({
-                    type: 'POST',
-                    url: '/delete_data',
-                    data: JSON.stringify({id: id}),
-                    contentType: 'application/json',
-                    success: function (response) {
-                        if (response.success) {
-                            row.remove();
-                            saveDataToFirebase();
-                        } else {
-                            alert('Erro ao excluir o investimento.');
+                var symbol = row.data('symbol');
+                
+                // Reutiliza a modal existente
+                $('#confirmSymbol').text(symbol);
+                $('#confirmPrice').parent().hide(); // Esconde o parágrafo do preço
+                $('.modal-content h2').text('Confirmar Exclusão'); // Muda o título
+                $('.modal-content p:first').text('Deseja realmente excluir esta ação da sua carteira?'); // Muda a mensagem
+                $('#confirmationModal').removeClass('hidden');
+                
+                // Handler para o botão confirmar
+                $('#confirmButton').one('click', function() {
+                    var id = row.data('id');
+                    
+                    $.ajax({
+                        type: 'POST',
+                        url: '/delete_data',
+                        data: JSON.stringify({id: id}),
+                        contentType: 'application/json',
+                        success: function (response) {
+                            if (response.success) {
+                                row.remove();
+                                saveDataToFirebase();
+                            } else {
+                                alert('Erro ao excluir o investimento.');
+                            }
+                        },
+                        error: function () {
+                            alert('Erro ao excluir o investimento. Por favor, tente novamente mais tarde.');
                         }
-                    },
-                    error: function () {
-                        alert('Erro ao excluir o investimento. Por favor, tente novamente mais tarde.');
-                    }
+                    });
+                    
+                    $('#confirmationModal').addClass('hidden');
+                    // Restaura o texto original da modal para quando for usada para adicionar ação
+                    $('.modal-content h2').text('Confirmar Adição');
+                    $('#confirmPrice').parent().show();
+                });
+                
+                // Handler para o botão cancelar
+                $('#cancelButton').one('click', function() {
+                    $('#confirmationModal').addClass('hidden');
+                    // Restaura o texto original da modal para quando for usada para adicionar ação
+                    $('.modal-content h2').text('Confirmar Adição');
+                    $('#confirmPrice').parent().show();
                 });
             });
 
