@@ -6,6 +6,7 @@ from rotas.rotaperfil import rotaperfil
 from rotas.rotaflls import rotaflls
 from rotas.rotaaçoes import rotaaçoes
 from rotas.rotacarteira import rotacarteira
+from rotas.rotarecomendacao import rotarecomendacao
 
 app = Flask(__name__)
 
@@ -74,6 +75,12 @@ def indexemprestimos():
     if 'user' not in session:
         return redirect(url_for('rotalogin.login'))
     return render_template('indexemprestimos.html')
+
+@app.route('/recomendacoes')
+def recomendacoes():
+    if 'user' not in session:
+        return redirect(url_for('rotalogin.login'))
+    return render_template('recomendacoes.html')
     
 app.register_blueprint(rotalogin)
 app.register_blueprint(rotaindex)
@@ -82,6 +89,7 @@ app.register_blueprint(rotaperfil)
 app.register_blueprint(rotaflls)
 app.register_blueprint(rotaaçoes)
 app.register_blueprint(rotacarteira)
+app.register_blueprint(rotarecomendacao)
 
 if __name__ == '__main__':
     app.run(debug=True)

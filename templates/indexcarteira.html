@@ -410,17 +410,37 @@
 
     <script>
         $(document).ready(function () {
+            // Função para obter parâmetros da URL
+            function getUrlParameter(name) {
+                name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+                var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+                var results = regex.exec(location.search);
+                return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+            }
+
             // Carregar lista de símbolos no campo de seleção
             $.ajax({
                 type: 'GET',
-                url: '/available_stocks', // Endpoint para obter a lista de símbolos
+                url: '/available_stocks',
                 success: function (response) {
                     if (response.stocks) {
                         var symbolSelect = $('#symbol');
-                        symbolSelect.empty(); // Limpar opções existentes
+                        symbolSelect.empty();
                         response.stocks.forEach(function (stock) {
                             symbolSelect.append(new Option(stock, stock));
                         });
+
+                        // Após carregar as opções, verifica se há um símbolo na URL
+                        var symbolFromUrl = getUrlParameter('symbol');
+                        if (symbolFromUrl) {
+                            // Procura a opção que corresponde ao símbolo
+                            var option = symbolSelect.find('option[value="' + symbolFromUrl + '"]');
+                            if (option.length) {
+                                symbolSelect.val(symbolFromUrl);
+                                // Foca no campo de valor para facilitar o preenchimento
+                                $('#amount').focus();
+                            }
+                        }
                     } else {
                         console.error('Erro ao carregar os símbolos das ações.');
                     }

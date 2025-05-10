@@ -471,12 +471,109 @@
             });
 
             let resultText;
+            let recommendations;
             if (score <= 24) {
                 resultText = "Conservador";
+                recommendations = {
+                    title: "Recomendações para Investidor Conservador",
+                    description: "Como investidor conservador, você prioriza a segurança e a preservação do capital. Suas recomendações são focadas em investimentos de baixo risco:",
+                    investments: [
+                        {
+                            name: "Tesouro Direto",
+                            description: "Títulos públicos do governo federal, considerados os investimentos mais seguros do Brasil.",
+                            allocation: "40-50% do portfólio"
+                        },
+                        {
+                            name: "CDBs de Bancos Grandes",
+                            description: "Certificados de Depósito Bancário de instituições sólidas, com proteção do FGC.",
+                            allocation: "20-30% do portfólio"
+                        },
+                        {
+                            name: "Fundos DI",
+                            description: "Fundos que acompanham a taxa Selic, oferecendo boa liquidez e baixo risco.",
+                            allocation: "15-20% do portfólio"
+                        },
+                        {
+                            name: "LCI/LCA",
+                            description: "Títulos de crédito imobiliário e agrícola, isentos de IR para pessoas físicas.",
+                            allocation: "10-15% do portfólio"
+                        }
+                    ],
+                    tips: [
+                        "Mantenha uma reserva de emergência em investimentos de alta liquidez",
+                        "Diversifique entre diferentes tipos de títulos de renda fixa",
+                        "Priorize investimentos com proteção do FGC",
+                        "Considere a inflação ao escolher seus investimentos"
+                    ]
+                };
             } else if (score <= 36) {
                 resultText = "Moderado";
+                recommendations = {
+                    title: "Recomendações para Investidor Moderado",
+                    description: "Como investidor moderado, você busca um equilíbrio entre segurança e rentabilidade. Suas recomendações incluem uma mistura de investimentos de renda fixa e variável:",
+                    investments: [
+                        {
+                            name: "Ações Blue Chips Brasileiras",
+                            description: "Ações de empresas grandes e consolidadas: Petrobras (PETR4), Vale (VALE3), Itaú (ITUB4), Bradesco (BBDC4), B3 (B3SA3).",
+                            allocation: "15-25% do portfólio"
+                        },
+                        {
+                            name: "Fundos Imobiliários",
+                            description: "FIIs como HGLG11, KNRI11, MXRF11 - focados em imóveis comerciais e recebíveis imobiliários.",
+                            allocation: "20-30% do portfólio"
+                        },
+                        {
+                            name: "Tesouro Direto",
+                            description: "Títulos públicos para manter uma base segura no portfólio.",
+                            allocation: "25-35% do portfólio"
+                        },
+                        {
+                            name: "Ações de Dividendos",
+                            description: "Ações com histórico de bons dividendos: Taesa (TAEE11), Copel (CPLE6), Eletrobras (ELET6).",
+                            allocation: "15-20% do portfólio"
+                        }
+                    ],
+                    tips: [
+                        "Mantenha uma base sólida em renda fixa",
+                        "Diversifique entre diferentes setores da economia brasileira",
+                        "Considere ETFs como BOVA11 para exposição ao Ibovespa",
+                        "Monitore regularmente a performance do seu portfólio"
+                    ]
+                };
             } else {
                 resultText = "Arrojado";
+                recommendations = {
+                    title: "Recomendações para Investidor Arrojado",
+                    description: "Como investidor arrojado, você está disposto a assumir mais riscos em busca de maiores retornos. Suas recomendações incluem uma maior exposição a ativos de renda variável:",
+                    investments: [
+                        {
+                            name: "Ações de Crescimento",
+                            description: "Ações com alto potencial: Magazine Luiza (MGLU3), Locaweb (LWSA3), Cielo (CIEL3), Via (VIIA3).",
+                            allocation: "30-40% do portfólio"
+                        },
+                        {
+                            name: "Small Caps Brasileiras",
+                            description: "Ações de empresas menores: Méliuz (CASH3), Enjoei (ENJU3), Locaweb (LWSA3), CVC (CVCB3).",
+                            allocation: "15-25% do portfólio"
+                        },
+                        {
+                            name: "Ações de Tecnologia",
+                            description: "Ações do setor de tecnologia: TOTVS (TOTS3), Locaweb (LWSA3), Cielo (CIEL3), Méliuz (CASH3).",
+                            allocation: "20-30% do portfólio"
+                        },
+                        {
+                            name: "Ações de Commodities",
+                            description: "Ações do setor de commodities: Vale (VALE3), Petrobras (PETR4), Gerdau (GGBR4), Suzano (SUZB3).",
+                            allocation: "15-20% do portfólio"
+                        }
+                    ],
+                    tips: [
+                        "Mantenha uma pequena parcela em renda fixa para segurança",
+                        "Diversifique entre diferentes setores da economia brasileira",
+                        "Considere ações de empresas com forte presença internacional",
+                        "Esteja preparado para volatilidade de curto prazo"
+                    ]
+                };
             }
 
             // Envia o resultado para o endpoint Flask
@@ -485,12 +582,44 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ result: resultText })
+                body: JSON.stringify({ 
+                    result: resultText,
+                    recommendations: recommendations 
+                })
             })
             .then(response => response.json())
             .then(() => {
-                // Exibe o resultado final na página
-                document.getElementById('result').innerText = `Você é um investidor ${resultText}.`;
+                // Exibe o resultado e recomendações na página
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `
+                    <div class="bg-white p-6 rounded-lg shadow-lg mt-6">
+                        <h2 class="text-2xl font-bold mb-4">Você é um investidor ${resultText}</h2>
+                        <h3 class="text-xl font-semibold mb-3">${recommendations.title}</h3>
+                        <p class="mb-4">${recommendations.description}</p>
+                        
+                        <div class="mb-6">
+                            <h4 class="text-lg font-semibold mb-3">Recomendações de Investimentos:</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                ${recommendations.investments.map(inv => `
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h5 class="font-semibold">${inv.name}</h5>
+                                        <p class="text-sm text-gray-600">${inv.description}</p>
+                                        <p class="text-sm font-medium mt-2">Alocação sugerida: ${inv.allocation}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-lg font-semibold mb-3">Dicas Importantes:</h4>
+                            <ul class="list-disc list-inside space-y-2">
+                                ${recommendations.tips.map(tip => `
+                                    <li class="text-gray-700">${tip}</li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
             });
         });
 
