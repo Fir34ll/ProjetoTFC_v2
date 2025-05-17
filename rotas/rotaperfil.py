@@ -68,13 +68,19 @@ def get_investor_profile():
                     "name": "LCI/LCA",
                     "description": "Títulos de crédito imobiliário e agrícola, isentos de IR para pessoas físicas.",
                     "allocation": "10-15% do portfólio"
+                },
+                {
+                    "name": "Ações de Dividendos (Opcional)",
+                    "description": "Ações de empresas sólidas com histórico de dividendos: Taesa (TAEE11), Copel (CPLE6), Eletrobras (ELET6), Banco do Brasil (BBAS3).",
+                    "allocation": "0-10% do portfólio (opcional)"
                 }
             ],
             "tips": [
                 "Mantenha uma reserva de emergência em investimentos de alta liquidez",
                 "Diversifique entre diferentes tipos de títulos de renda fixa",
                 "Priorize investimentos com proteção do FGC",
-                "Considere a inflação ao escolher seus investimentos"
+                "Considere a inflação ao escolher seus investimentos",
+                "Se optar por ações, priorize empresas com histórico de dividendos e baixa volatilidade"
             ]
         }
     elif profile_type == "Moderado":
