@@ -319,12 +319,21 @@
             });
 
             candlestickSeries.setData(data.map(item => ({
-                time: new Date(item.date).getTime() / 1000,
+                time: item.date,
                 open: item.open,
                 high: item.high,
                 low: item.low,
-                close: item.close,
+                close: item.close
             })));
+
+            chart.timeScale().applyOptions({
+                timeVisible: false,
+                secondsVisible: false,
+                tickMarkFormatter: (time) => {
+                    const date = new Date(time * 1000);
+                    return date.toLocaleDateString('pt-BR');
+                }
+            });
         }
     </script>
 </body>
