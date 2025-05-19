@@ -42,6 +42,19 @@ def login():
                 else:
                     flash("Erro no registro: " + error_message, "error")
                 return render_template('login.html')
+        elif action == 'recover':
+            try:
+                email = request.form.get('email')
+                auth.send_password_reset_email(email)
+                flash("Email de recuperação enviado com sucesso! Verifique sua caixa de entrada.", "success")
+                return redirect(url_for('rotalogin.login'))
+            except Exception as e:
+                error_message = str(e)
+                if "EMAIL_NOT_FOUND" in error_message:
+                    flash("Email não encontrado.", "error")
+                else:
+                    flash("Erro ao enviar email de recuperação: " + error_message, "error")
+                return render_template('login.html')
         else:
             try:
                 email = request.form['email']

@@ -28,6 +28,33 @@
                 </div>
                 <button type="submit">Login</button>
             </form>
+            <div class="forgot-password">
+                <a href="#" id="forgot-password-link">Esqueceu a senha?</a>
+            </div>
+        </div>
+
+        <!-- Modal de Recuperação de Senha -->
+        <div id="recovery-modal" class="modal">
+            <div class="modal-content recovery-modal">
+                <div class="modal-header">
+                    <h2>Recuperar Senha</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p class="recovery-text">Digite seu email para receber as instruções de recuperação de senha.</p>
+                    <form method="post" action="/login" class="recovery-form">
+                        <input type="hidden" name="action" value="recover">
+                        <div class="input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" name="email" id="recover-email" placeholder="Seu email" required>
+                        </div>
+                        <button type="submit" class="recovery-button">
+                            <i class="fas fa-paper-plane"></i>
+                            Enviar Email de Recuperação
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
 
         <div id="signupform">
@@ -178,6 +205,169 @@
         .password-field input {
             padding-right: 35px;
         }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .forgot-password a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            opacity: 0.8;
+        }
+
+        .forgot-password a:hover {
+            color: #45a049;
+            opacity: 1;
+        }
+
+        .back-to-login {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .back-to-login a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-to-login a:hover {
+            color: #4CAF50;
+        }
+
+        /* Estilos para o Modal de Recuperação de Senha */
+        .recovery-modal {
+            max-width: 400px;
+            background: linear-gradient(145deg, #1a1a1a, #000000);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: #4CAF50;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .recovery-text {
+            color: #ffffff;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .recovery-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ffffff;
+            opacity: 0.5;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: #4CAF50;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+        }
+
+        .recovery-button {
+            background: linear-gradient(145deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .recovery-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+        }
+
+        .recovery-button i {
+            font-size: 1rem;
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .forgot-password a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            opacity: 0.8;
+        }
+
+        .forgot-password a:hover {
+            color: #45a049;
+            opacity: 1;
+        }
     </style>
 
     <!-- Adicione este JavaScript -->
@@ -223,7 +413,30 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Toggle para senha do login
+            // Password recovery modal handling
+            const forgotPasswordLink = document.getElementById('forgot-password-link');
+            const recoveryModal = document.getElementById('recovery-modal');
+            const closeModal = document.querySelector('.close-modal');
+
+            if (forgotPasswordLink && recoveryModal && closeModal) {
+                forgotPasswordLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    recoveryModal.style.display = 'flex';
+                });
+
+                closeModal.addEventListener('click', function() {
+                    recoveryModal.style.display = 'none';
+                });
+
+                // Close modal when clicking outside
+                recoveryModal.addEventListener('click', function(e) {
+                    if (e.target === recoveryModal) {
+                        recoveryModal.style.display = 'none';
+                    }
+                });
+            }
+
+            // Existing password toggle code
             const toggleLoginPassword = document.getElementById('toggle-login-password');
             const loginPassword = document.getElementById('login-password');
             
